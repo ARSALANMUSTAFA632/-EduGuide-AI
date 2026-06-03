@@ -1,5 +1,5 @@
 import streamlit as st
-from groq import Groq بالکل درست امپورٹ (کوئی اسپیس نہیں)
+from groq import Groq
 import sys
 import os
 
@@ -12,7 +12,6 @@ if sys.stdout.encoding != 'utf-8':
     sys.stdout.reconfigure(encoding='utf-8')
 
 # --- 3. گروک اے پی آئی کی (Groq API Key) حاصل کرنا ---
-# اسٹریم لٹ کلاؤڈ کے Secrets سے کی اٹھائے گا، ورنہ لوکل انوائرمنٹ سے
 if "GROQ_API_KEY" in st.secrets:
     MY_GROQ_KEY = st.secrets["GROQ_API_KEY"]
 else:
