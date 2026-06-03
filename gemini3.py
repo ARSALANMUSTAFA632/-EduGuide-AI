@@ -1,5 +1,5 @@
 import streamlit as st
-from groq import Groq  # <--- بالکل درست امپورٹ (کوئی اسپیس نہیں)
+from groq import Groq بالکل درست امپورٹ (کوئی اسپیس نہیں)
 import sys
 import os
 
