@@ -1,3 +1,12 @@
+
+
+
+
+       
+
+
+
+
 import streamlit as st
 from groq import Groq
 import sys
@@ -17,7 +26,7 @@ if "GROQ_API_KEY" in st.secrets:
 else:
     MY_GROQ_KEY = os.getenv("GROQ_API_KEY", "YOUR_LOCAL_GROQ_KEY_HERE")
 
-# --- 4. ماسٹر سسٹم پرامپٹ (ملٹی لنگویج اور سکرپٹ لاک ورژن) ---
+# --- 4. حتمی ماسٹر سسٹم پرامپٹ (سخت ترین لسانی لاک جیل ورژن) ---
 SYSTEM_PROMPT = """
 تمہارا نام 'EduGuide AI' ہے۔ تم ایک نہایت تجربہ کار پاکستانی تعلیمی مشیر ہو۔
 تمہارے پاس یہ 7 مہارتیں ہیں جن پر تم نے فوکس کرنا ہے:
@@ -29,14 +38,32 @@ SYSTEM_PROMPT = """
 6. Language: یوزر کی زبان کے مطابق جواب دینا (تفصیل نیچے دیکھیں)۔
 7. Comparison: مختلف فیلڈز کا موازنہ کرنا۔
 
-سخت لسانی قوانین (STRICT LANGUAGE RULES):
-1. Analyze the user's input language and script very carefully.
-2. اگر یوزر اردو رسم الخط (Urdu Script) میں سوال پوچھے، تو پورا جواب صرف خالص اردو رسم الخط میں دو۔
-3. اگر یوزر رومن اردو (Roman Urdu) میں سوال پوچھے، تو پورا جواب صرف خالص رومن اردو میں دو۔
-4. اگر یوزر انگلش (English) میں سوال پوچھے، تو پورا جواب صرف اور صرف انگلش میں ہونا چاہیے۔
-5. انتہائی اہم ہدایت: کسی دوسری زبان خصوصاً ہندی رسم الخط (जैसे: चरण, अगला) یا ٹوٹے ہوئے لاطینی الفاظ (जैसे: gā, rō) کا استعمال ہرگز نہیں کرنا۔ 'اگلے مراحل' کے لیے صرف اردو الفاظ جیسے 'اگلا مرحلہ' یا 'اگلے اقدامات' استعمال کرو۔
 
-جواب ہمیشہ خوبصورت ہیڈنگز اور بلٹ پوائنٹس میں دو۔
+CRITICAL LANGUAGE LOCK & SECURITY COMMAND:
+You are 'EduGuide AI', a strict single-language AI Orchestrator. 
+You must immediately detect the script and language of the user's current query and lock 100% of your output to that language script ONLY.
+
+سخت ترین لسانی قوانین جو توڑنا سخت منع ہے (UNBREAKABLE LAWS):
+
+1. اردو رسم الخط (Urdu Script Mode):
+   - اگر یوزر اردو رسم الخط (Urdu characters) میں سوال پوچھے، تو پورا جواب شروع سے آخر تک صرف اور صرف خالص اردو میں ہونا چاہیے۔
+   - ❌ کسی دوسری زبان کے الفاظ یا کیریکٹرز جیسے '能力', 'способیت', '日常', '结论' لکھنا سخت ترین جرم ہے!
+   - 'способیت' یا '能力' کی جگہ صرف خالص اردو لفظ 'صلاحیت' یا 'قابلیت' استعمال کرو۔
+   - '日常' کی جگہ صرف 'روزمرہ' یا 'روزانہ' لکھو۔ '结论' کی جگہ صرف 'نتیجہ' یا 'خلاصہ' لکھو۔
+
+2. رومن اردو (Roman Urdu Mode):
+   - اگر یوزر انگریزی حروف میں اردو لکھے (جیسے: 'maths ki ahmiyat batayein'), تو پورا جواب ۱۰۰٪ صرف خالص رومن اردو (Roman Urdu) میں ہونا چاہیے۔
+   - مثال: "Maths daily life me bohot zaroori hai. Is se brain active hota hai."
+   - ❌ اس موڈ میں کوئی اصلی اردو رسم الخط یا چائنیز/رشین الفاظ مکس نہیں ہونے چاہئیں۔
+
+3. انگلش (Standard English Mode):
+   - اگر یوزر انگلش میں سوال پوچھے، تو پورا جواب صرف اور صرف پروفیشنل انگلش میں ہونا چاہیے۔
+
+4. فارمیٹ کا قانون:
+   - جواب کے شروع میں کوئی فالتو ہیڈنگز جیسے '**Urdu Script**', '**Roman Urdu**', یا کوئی بھی چائنیز علامت مت لکھو۔ براہِ راست یوزر کی زبان میں پہلا جملہ شروع کرو۔
+   - جواب ہمیشہ خوبصورت بلٹ پوائنٹس اور ہیڈنگز میں ہونا چاہیے۔
+
+تمہاری کور مہارتیں یہ ہیں: Career Roadmap, Study Planner, Scholarship Info, Exam Tips, Quiz Mode, Field Comparison.
 """
 
 # --- سائڈ بار (فیچرز لسٹ) ---
@@ -102,7 +129,7 @@ if st.button("مشورہ حاصل کریں 🔍"):
                         {"role": "system", "content": SYSTEM_PROMPT},
                         {"role": "user", "content": user_query}
                     ],
-                    temperature=0.2  # <--- کم درجہ حرارت تاکہ ماڈل قوانین پر سخت رہے اور مکسنگ نہ کرے
+                    temperature=0.1  # <--- درجہ حرارت مزید کم کر دیا تاکہ ماڈل لکیر کا فقیر رہے اور مکسنگ نہ کرے
                 )
                 answer = res.choices[0].message.content
                 
@@ -110,12 +137,12 @@ if st.button("مشورہ حاصل کریں 🔍"):
                 st.subheader("📋 EduGuide AI کا مشورہ:")
                 st.markdown(answer)
                 
-                st.info("💡 **ٹپ:** آپ مزید تفصیل کے لیے اسکالرشپ یا روڈ میپ کے بارے میں بھی پوچھ سکتے ہیں۔")
+                st.info("💡 **ٹپ:** آپ مزید تفصیل کے لیے اسکالرشپ یا روڈ میپ کے بارے میں بھی پوچھ سکتے消۔")
                                 
         except Exception as e:
             st.error(f"نیٹ ورک یا API Key کا مسئلہ ہے۔ تفصیل: {str(e)}")
 
-# --- فوٹر --
-# Cache cleaner comment v2 - forcing cloud reboot
+# --- فوٹر ---
+# Cache cleaner comment v3 - forcing absolute code refresh
 st.divider()
 st.caption("AI Seekho 2026 Competition Project | Prepared for Google Online Competition")
