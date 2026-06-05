@@ -115,6 +115,7 @@ if st.button("مشورہ حاصل کریں 🔍"):
         except Exception as e:
             st.error(f"نیٹ ورک یا API Key کا مسئلہ ہے۔ تفصیل: {str(e)}")
 
-# --- فوٹر ---
+# --- فوٹر --
+# Cache cleaner comment v2 - forcing cloud reboot
 st.divider()
 st.caption("AI Seekho 2026 Competition Project | Prepared for Google Online Competition")
