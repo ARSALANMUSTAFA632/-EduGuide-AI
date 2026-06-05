@@ -98,6 +98,7 @@ with col_btn3:
 user_query = st.text_input("اپنا سوال لکھیں یا اوپر سے بٹن منتخب کریں:", value=st.session_state.user_input)
 
 # --- پراسیسنگ ---
+# --- پراسیسنگ ---
 if st.button("مشورہ حاصل کریں 🔍"):
     if not user_query:
         st.warning("ارسلان بھائی، پہلے کوئی سوال تو لکھیں یا بٹن دبائیں!")
@@ -113,15 +114,21 @@ if st.button("مشورہ حاصل کریں 🔍"):
                         {"role": "system", "content": SYSTEM_PROMPT},
                         {"role": "user", "content": user_query}
                     ],
-                    temperature=0.1  # <--- درجہ حرارت مزید کم کر دیا تاکہ ماڈل لکیر کا فقیر رہے اور مکسنگ نہ کرے
+                    temperature=0.1  
                 )
-                answer = res.choices[0].message.content
+                raw_answer = res.choices[0].message.content
+                
+                # 🎯 ماسٹر اردو فلٹر: اگر ماڈل بہک جائے تو پائیتھون زبردستی فکس کر دے گا
+                clean_answer = raw_answer.replace("способیت", "صلاحیت")
+                clean_answer = clean_answer.replace("能力", "صلاحیت")
+                clean_answer = clean_answer.replace("日常", "روزمرہ")
+                clean_answer = clean_answer.replace("结论", "نتیجہ")
                 
                 st.divider()
                 st.subheader("📋 EduGuide AI کا مشورہ:")
-                st.markdown(answer)
+                st.markdown(clean_answer) # <--- اب اسکرین پر صرف صاف فلٹرڈ جواب جائے گا
                 
-                st.info("💡 **ٹپ:** آپ مزید تفصیل کے لیے اسکالرشپ یا روڈ میپ کے بارے میں بھی پوچھ سکتے消۔")
+                st.info("💡 **ٹپ:** آپ مزید تفصیل کے لیے اسکالرشپ یا روڈ میپ کے بارے میں بھی پوچھ سکتے ہیں۔")
                                 
         except Exception as e:
             st.error(f"نیٹ ورک یا API Key کا مسئلہ ہے۔ تفصیل: {str(e)}")
